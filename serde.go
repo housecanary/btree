@@ -2,7 +2,6 @@ package btree
 
 import (
 	"encoding/binary"
-	"fmt"
 	"io"
 )
 
@@ -13,18 +12,15 @@ func (t *BTree) Save(
 	if err = binary.Write(f, binary.BigEndian, uint64(t.degree)); err != nil {
 		return
 	}
-	fmt.Printf("Wrote degree\n")
 
 	if err = binary.Write(f, binary.BigEndian, uint64(t.length)); err != nil {
 		return
 	}
-	fmt.Printf("Wrote length\n")
 
 	gotTree := t.root != nil
 	if err = binary.Write(f, binary.BigEndian, gotTree); err != nil {
 		return
 	}
-	fmt.Printf("Wrote gotTree\n")
 
 	if gotTree {
 		if err = t.root.save(f, saveItem); err != nil {
@@ -43,13 +39,11 @@ func (n *node) save(
 	if err = binary.Write(f, binary.BigEndian, uint8(nItems)); err != nil {
 		return
 	}
-	fmt.Printf("Wrote nItems: %v\n", nItems)
 
 	gotChildren := len(n.children) > 0
 	if err = binary.Write(f, binary.BigEndian, gotChildren); err != nil {
 		return
 	}
-	fmt.Printf("Wrote gotChildren: %v\n", gotChildren)
 	// values on this node
 	for i := 0; i < nItems; i++ {
 		item := n.items[i]
@@ -79,20 +73,17 @@ func Load(
 	if err = binary.Read(f, binary.BigEndian, &word); err != nil {
 		return
 	}
-	fmt.Printf("Read degree\n")
 	t.degree = int(word)
 
 	if err = binary.Read(f, binary.BigEndian, &word); err != nil {
 		return
 	}
-	fmt.Printf("Read length\n")
 	t.length = int(word)
 
 	var gotTree bool
 	if err = binary.Read(f, binary.BigEndian, &gotTree); err != nil {
 		return
 	}
-	fmt.Printf("Read gotTree: %v\n", gotTree)
 
 	if gotTree {
 		// this buffer will be re-used or replaced for a larger one, as needed
@@ -116,14 +107,12 @@ func load(
 	if err = binary.Read(f, binary.BigEndian, &short); err != nil {
 		return
 	}
-	fmt.Printf("Read numItems: %d\n", short)
 	nItems := int(short)
 
 	var gotChildren bool
 	if err = binary.Read(f, binary.BigEndian, &gotChildren); err != nil {
 		return
 	}
-	fmt.Printf("Read gotChildren: %v\n", gotChildren)
 
 	// values on this node
 	var item Item
