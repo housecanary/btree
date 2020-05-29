@@ -26,7 +26,7 @@ func (t *BTree) Save(
 	}
 	fmt.Printf("Wrote gotTree\n")
 
-	if t.root != nil {
+	if gotTree {
 		if err = t.root.save(f, saveItem); err != nil {
 			return
 		}
